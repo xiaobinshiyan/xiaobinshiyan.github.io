@@ -64,7 +64,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="浏览器刷新" />
+  <meta name="keywords" content="利用redis队列，PHP脚本定时入库" />
 
 
 
@@ -80,16 +80,16 @@
 
 
 
-<meta name="description" content="浏览器防刷新检测,通过缓存当前地址访问时间">
+<meta name="description" content="由于公司论坛用的是开源框架，在APP注册的时候需要向论坛的几张表中录入基本的信息，以确保登录论坛的时候的信息完整性，因为考虑到用户不会再APP注册后直接登陆论坛，那么就满足了MQ的条件：上游不关心下游执行结果。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="浏览器防刷新检测代码">
-<meta property="og:url" content="http://zxbin.me/2017/06/12/hello-world/index.html">
+<meta property="og:title" content="利用redis队列，PHP脚本定时入库">
+<meta property="og:url" content="http://zxbin.me/2017/07/12/php-redis/index.html">
 <meta property="og:site_name" content="Xiaobin`s blog">
-<meta property="og:description" content="浏览器防刷新检测,通过缓存当前地址访问时间">
-<meta property="og:updated_time" content="2017-09-19T13:57:07.000Z">
+<meta property="og:description" content="由于公司论坛用的是开源框架，在APP注册的时候需要向论坛的几张表中录入基本的信息，以确保登录论坛的时候的信息完整性，因为考虑到用户不会再APP注册后直接登陆论坛，那么就满足了MQ的条件：上游不关心下游执行结果。">
+<meta property="og:updated_time" content="2017-09-19T13:41:45.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="浏览器防刷新检测代码">
-<meta name="twitter:description" content="浏览器防刷新检测,通过缓存当前地址访问时间">
+<meta name="twitter:title" content="利用redis队列，PHP脚本定时入库">
+<meta name="twitter:description" content="由于公司论坛用的是开源框架，在APP注册的时候需要向论坛的几张表中录入基本的信息，以确保登录论坛的时候的信息完整性，因为考虑到用户不会再APP注册后直接登陆论坛，那么就满足了MQ的条件：上游不关心下游执行结果。">
 
 
 
@@ -107,7 +107,7 @@
   };
 </script>
 
-  <title> 浏览器防刷新检测代码 | Xiaobin`s blog </title>
+  <title> 利用redis队列，PHP脚本定时入库 | Xiaobin`s blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -227,7 +227,7 @@
             
             
               
-                浏览器防刷新检测代码
+                利用redis队列，PHP脚本定时入库
               
             
           </h1>
@@ -239,8 +239,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-12T23:05:00+08:00" content="2017-06-12">
-              2017-06-12
+            <time itemprop="dateCreated" datetime="2017-07-12T23:05:00+08:00" content="2017-07-12">
+              2017-07-12
             </time>
           </span>
 
@@ -269,8 +269,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/06/12/hello-world/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/12/hello-world/" itemprop="commentsCount"></span>
+                <a href="/2017/07/12/php-redis/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/07/12/php-redis/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -293,7 +293,18 @@
       
 
       
-        <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BrowserCheckBehavior</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">(&amp;$params)</span> </span><br><span class="line">  </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>($_SERVER[<span class="string">'REQUEST_METHOD'</span>] == <span class="string">'GET'</span>) </span><br><span class="line">    &#123;</span><br><span class="line">	    <span class="comment">// 启用页面防刷新机制</span></span><br><span class="line">	    $guid = md5($_SERVER[<span class="string">'PHP_SELF'</span>]);</span><br><span class="line">	    <span class="comment">// 浏览器防刷新的时间间隔（秒） 默认为10</span></span><br><span class="line">	    $refleshTime = C(<span class="string">'LIMIT_REFLESH_TIMES'</span>,<span class="keyword">null</span>,<span class="number">10</span>);</span><br><span class="line">	    <span class="comment">// 检查页面刷新间隔</span></span><br><span class="line">	    <span class="keyword">if</span>(cookie(<span class="string">'_last_visit_time_'</span>.$guid) &amp;&amp; cookie(<span class="string">'_last_visit_time_'</span>.$guid)&gt;time()-$refleshTime) </span><br><span class="line">	    &#123;</span><br><span class="line">	        <span class="comment">// 页面刷新读取浏览器缓存</span></span><br><span class="line">	        header(<span class="string">'HTTP/1.1 304 Not Modified'</span>);</span><br><span class="line">	        <span class="keyword">exit</span>;</span><br><span class="line">	    &#125;</span><br><span class="line">	    <span class="keyword">else</span></span><br><span class="line">	    &#123;</span><br><span class="line">	        <span class="comment">// 缓存当前地址访问时间</span></span><br><span class="line">	        cookie(<span class="string">'_last_visit_time_'</span>.$guid, $_SERVER[<span class="string">'REQUEST_TIME'</span>]);</span><br><span class="line">	        <span class="comment">//header('Last-Modified:'.(date('D,d M Y H:i:s',$_SERVER['REQUEST_TIME']-C('LIMIT_REFLESH_TIMES'))).' GMT');</span></span><br><span class="line">	    &#125;</span><br><span class="line">  	&#125;</span><br><span class="line"> 	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>最近QA同学在压测接口的时候，在并发的时候，注册接口返回特别慢，当然测试的有点暴力~~。关于并发这个问题，第一：上机器；第二：提升单机性能，第一条吗 qAq~ ，这里主要是代码优化。</p>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>由于公司论坛用的是开源框架，在APP注册的时候需要向论坛的几张表中录入基本的信息，以确保登录论坛的时候的信息完整性，因为考虑到用户不会再APP注册后直接登陆论坛，那么就满足了MQ的条件：上游不关心下游执行结果。</p>
+<p>####思路</p>
+<ul>
+<li>用户APP注册的时候，用户信息序列化，保存到redis队列</li>
+<li>通过crontab任务执行PHP脚本，批量入库<br>####具体操作<br>#####一：Redis存储数据至消息队列<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$session_class = RedisSession::getInstance();</span><br><span class="line">$redis= $session_class-&gt;redis(); <span class="comment">//返回Redis实例</span></span><br><span class="line">$redis-&gt;rPush(<span class="string">"task_usersinfo"</span>,$userInfoToRedis); <span class="comment">//$userInfoToRedis 用户数组信息</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>#####二：数据库批量入库<br>定时读取redis消息队列里面的数据，批量入库。下面为示例代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span> <span class="string">'./db.php'</span>; <span class="comment">//数据库封装类</span></span><br><span class="line"><span class="keyword">if</span>(!extension_loaded(<span class="string">'redis'</span>))</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> \<span class="keyword">Exception</span>(<span class="string">"Redis Extension needed!"</span>);</span><br><span class="line">$redis = <span class="keyword">new</span> Redis();</span><br><span class="line">$redis-&gt;connect(<span class="string">'**********'</span>,<span class="number">6379</span>) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">"Can't connect to the Redis!"</span>);</span><br><span class="line">$redis-&gt;auth(<span class="string">"*********"</span>);</span><br><span class="line">$redis_name = <span class="string">'task_usersinfo'</span>;</span><br><span class="line">$db = DB::getIntance();</span><br><span class="line">$n = <span class="number">0</span>;</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$sql = <span class="string">"INSERT INTO `user_info` (`uid`,`username`) values "</span>;</span><br><span class="line">$sql2 = <span class="string">"INSERT INTO `user_info_data` (`uid`) values "</span>;</span><br><span class="line">$roll_back_arr = <span class="keyword">array</span>();</span><br><span class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line"><span class="keyword">if</span>($i%<span class="number">30</span> == <span class="number">0</span>) &#123;</span><br><span class="line">usleep(<span class="number">2</span>);<span class="comment">//防止while 循环使CPU使用率过高</span></span><br><span class="line">&#125;</span><br><span class="line">$user = $redis-&gt;lPop($redis_name);<span class="comment">//从队列最左侧取出一个值</span></span><br><span class="line">$roll_back_arr = $user;</span><br><span class="line"><span class="keyword">if</span>(! $user || $redis == <span class="string">'nil'</span>) &#123;</span><br><span class="line">$sql .= <span class="string">";"</span>;</span><br><span class="line">$sq2 .= <span class="string">";"</span>;</span><br><span class="line"><span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line">$user_arr = unserialize($user);</span><br><span class="line">$sql .= <span class="string">" ('"</span>.$user_arr[<span class="string">'uid'</span>].<span class="string">"','"</span>.$user_arr[<span class="string">'username'</span>].<span class="string">"'),"</span>;</span><br><span class="line">$sql2 .= <span class="string">" ('"</span>.$user_arr[<span class="string">'uid'</span>].<span class="string">"'),"</span>;</span><br><span class="line">$n++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> ($n != <span class="number">0</span>) &#123;</span><br><span class="line">$db-&gt;trans_begin();</span><br><span class="line">  $db-&gt;query($sql);</span><br><span class="line">  $db-&gt;query($sql2);</span><br><span class="line">  <span class="keyword">if</span>($db-&gt;trans_commit()) &#123;</span><br><span class="line">  <span class="keyword">echo</span> date(<span class="string">'Y-m-d H:i:s'</span>) . <span class="string">'===COMMIT SUCCESS==== Userid =( '</span> . $user_arr[<span class="string">'uid'</span>] . <span class="string">"\n"</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  $db-&gt;trans_rollback();</span><br><span class="line">  <span class="keyword">echo</span> date(<span class="string">'Y-m-d H:i:s'</span>) . <span class="string">'====ROLLBACK==== Userid =( '</span> . $user_arr[<span class="string">'uid'</span>] . <span class="string">"\n"</span>;</span><br><span class="line">  <span class="keyword">if</span>(!$res)&#123;</span><br><span class="line"><span class="keyword">foreach</span>($roll_back_arr <span class="keyword">as</span> $v)&#123;</span><br><span class="line">$redis-&gt;lPush($redis_name,$v);<span class="comment">//数据库插入失败的回滚机制</span></span><br><span class="line">&#125;</span><br><span class="line">  &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//释放redis</span></span><br><span class="line"><span class="comment">// echo date('Y-m-d H:i:s') . "====END==== \n";</span></span><br><span class="line">$redis-&gt;close();</span><br><span class="line">mysqli_close($db-&gt;link);</span><br></pre></td></tr></table></figure></p>
+<p>####定时脚本<br>部署代码，crontab运行。<br><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*/<span class="number">1</span> * * * * cd /Users/xiaobin/ &amp;&amp; /server/php-<span class="number">7.0</span>.<span class="number">10</span>/bin/php index.php &gt;&gt; usersinfo.log</span><br></pre></td></tr></table></figure></p>
+<p>引用：<a href="https://github.com/voocel/queue" target="_blank" rel="external">github</a></p>
+
       
     </div>
     
@@ -322,17 +333,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/06/12/hexo-搭建个人博客/" rel="next" title="hexo 搭建个人博客">
-                <i class="fa fa-chevron-left"></i> hexo 搭建个人博客
+              <a href="/2017/06/12/hello-world/" rel="next" title="浏览器防刷新检测代码">
+                <i class="fa fa-chevron-left"></i> 浏览器防刷新检测代码
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/07/12/php-redis/" rel="prev" title="利用redis队列，PHP脚本定时入库">
-                利用redis队列，PHP脚本定时入库 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -359,7 +366,7 @@
   <div class="comments" id="comments">
     
       <!-- 多说评论框 start -->
-        <div class="ds-thread" data-thread-key="2017/06/12/hello-world/" data-title="浏览器防刷新检测代码" data-url="http://zxbin.me/2017/06/12/hello-world/"></div>
+        <div class="ds-thread" data-thread-key="2017/07/12/php-redis/" data-title="利用redis队列，PHP脚本定时入库" data-url="http://zxbin.me/2017/07/12/php-redis/"></div>
       <!-- 多说评论框 end -->
       <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
       <script type="text/javascript">
@@ -463,7 +470,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li></ol></div>
             
           </div>
         </section>
